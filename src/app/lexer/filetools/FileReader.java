@@ -1,21 +1,20 @@
-package app.filetools;
+package app.lexer.filetools;
 
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public class FileReader {
+
+  Scanner smallLangScanner;
+  List<Character> line;
+  char rollbackChar;
 
   public FileReader(String filename) {
     readFile(filename);
   }
-
-  static Scanner smallLangScanner;
-  static List<Character> word;
 
   /**
    * Reads a file and returns a scanner.
@@ -39,40 +38,38 @@ public class FileReader {
   }
 
   /**
-   * Returns the next character from the file (ignoring comments and whitespaces).
+   * Stores the current File in the FileReader class properties and iterates
+   * through, then returns the corresponding character everytime that the method
+   * is called.
    * 
-   * @return next char
+   * @return next char from file
    * 
    */
   public char nextChar() {
-    char character = ' ';
+    char character = Character.MIN_VALUE;
 
-    if (word != null) {
-
-      if (!word.isEmpty()) {
-
-        character = word.get(0);
-        word.remove(0);
+    if (line != null) {
+      // If line is not empty, load characters from the line
+      if (!line.isEmpty()) {
+        character = line.get(0);
+        rollbackChar = line.get(0);
+        line.remove(0);
 
       } else {
-
-        word = null;
+        line = null;
 
       }
     }
 
-    if (word == null) {
-
+    // If line is null, load next line...
+    if (line == null) {
       if (smallLangScanner.hasNextLine()) {
-
         final String data = smallLangScanner.nextLine();
-
-        String commentRegex = "^\\/\\/";
-
-        final Pattern comment = Pattern.compile(commentRegex);
-        final Matcher foundComment = comment.matcher(data);
-
         /*
+         * Comment Finder String commentRegex = "^\\/\\/"; final Pattern comment =
+         * Pattern.compile(commentRegex); final Matcher foundComment =
+         * comment.matcher(data);
+         *
          * Symbol Checker
          * 
          * final Pattern p = Pattern.compile("[^A-Za-z0-9.]"); final Matcher m =
@@ -80,33 +77,33 @@ public class FileReader {
          * data.split("((?<=[^A-Za-z0-9.])|(?=[^A-Za-z0-9.]))");
          */
 
-        if (!foundComment.find()) {
-
-          word = new ArrayList<>();
+        if (data.length() != 0) {
+          line = new ArrayList<>();
           char[] letters = data.toCharArray();
 
           for (char c : letters) {
-            word.add(c);
+            line.add(c);
           }
 
-          character = word.get(0);
-          word.remove(0);
+          character = line.get(0);
+          rollbackChar = line.get(0);
+          line.remove(0);
 
         }
 
       } else {
-        
         smallLangScanner.close();
 
       }
-
-    }
-
-    if (character == ' ') {
-      System.out.println("Character Not Found");
     }
 
     return character;
   }
 
+  /**
+   * aa.
+   */
+  public void rollBack() {
+    line.add(0, rollbackChar);
+  }
 }
