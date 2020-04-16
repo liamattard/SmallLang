@@ -9,10 +9,47 @@ import java.util.Objects;
 public class StateType {
   State state;
   Type type;
+  State stateReturn;
 
   public StateType(State state, Type type) {
     this.state = state;
     this.type = type;
+  }
+
+  /**
+   * aa.
+   * @param state state
+   * @param type  type
+   * @param stateReturn statereturn
+   */
+  public StateType(State state, Type type, State stateReturn) {
+    this.state = state;
+    this.type = type;
+    this.stateReturn = stateReturn;
+  }
+
+  public State getState() {
+    return this.state;
+  }
+
+  public void setState(State state) {
+    this.state = state;
+  }
+
+  public Type getType() {
+    return this.type;
+  }
+
+  public void setType(Type type) {
+    this.type = type;
+  }
+
+  public State getStateReturn() {
+    return this.stateReturn;
+  }
+
+  public void setStateReturn(State stateReturn) {
+    this.stateReturn = stateReturn;
   }
 
 

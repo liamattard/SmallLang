@@ -1,6 +1,6 @@
 package app.lexer;
 
-import app.lexer.filetools.FileReader;
+import app.lexer.filetools.SmallLangReader;
 import app.lexer.tables.ClassifierTable;
 import app.lexer.tables.ClassifierTable.Type;
 import app.lexer.tables.TokenTypeTable.State;
@@ -14,14 +14,14 @@ public class Lexer {
   private State state;
   private Stack<State> stack = new Stack<State>();
 
-  private FileReader file;
+  private SmallLangReader file;
 
-  public Lexer(FileReader file) {
+  public Lexer(SmallLangReader file) {
     this.file = file;
   }
 
   /**
-   * asdkjasd.
+   * Follows the Table driven lexer pseudo-code from the slide notes.
    */
   public void nextWord() {
 
@@ -31,6 +31,7 @@ public class Lexer {
     stack.push(State.BAD);
 
     while (state != State.ERROR) {
+
 
       char c = file.nextChar();
       lexeme += c;
@@ -47,7 +48,7 @@ public class Lexer {
 
     while (!state.isAcceptState() && state != State.BAD) {
       state = stack.pop();
-      lexeme = lexeme.substring(0, lexeme.length() - 1);
+      truncate();
       file.rollBack();
     }
 
@@ -58,6 +59,12 @@ public class Lexer {
       System.out.println(state.toString());
     }
 
+  }
+  
+  private void truncate() {
+    if (lexeme.length() > 0) {
+      lexeme = lexeme.substring(0, lexeme.length() - 1);
+    }
   }
 
 }

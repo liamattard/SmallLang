@@ -6,13 +6,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class FileReader {
+public class SmallLangReader {
 
-  Scanner smallLangScanner;
-  List<Character> line;
-  char rollbackChar;
+  private Scanner smallLangScanner;
+  private List<Character> line;
+  private char rollbackChar;
+  private boolean closed = false;
 
-  public FileReader(String filename) {
+  public SmallLangReader(String filename) {
     readFile(filename);
   }
 
@@ -92,6 +93,7 @@ public class FileReader {
         }
 
       } else {
+        closed = true;
         smallLangScanner.close();
 
       }
@@ -104,6 +106,9 @@ public class FileReader {
    * aa.
    */
   public void rollBack() {
-    line.add(0, rollbackChar);
+    if (closed == false && rollbackChar != ' ') {
+      line.add(0, rollbackChar);
+    }
+
   }
 }

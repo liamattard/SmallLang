@@ -1,7 +1,7 @@
 package app;
 
 import app.lexer.Lexer;
-import app.lexer.filetools.FileReader;
+import app.lexer.filetools.SmallLangReader;
 
 // import java.io.*;
 // import java.util.*;
@@ -12,9 +12,14 @@ public class App {
    */
   public static void main(String[] args) throws Exception {
 
-    FileReader xfile = new FileReader("float.smalllang");
+    SmallLangReader xfile = new SmallLangReader("example.smalllang");
     Lexer lexer = new Lexer(xfile);
-    lexer.nextWord();
+    
+    for (int i = 0; i < 20; i++) {
+      lexer.nextWord();
+    }
+
+
   }
 
 }

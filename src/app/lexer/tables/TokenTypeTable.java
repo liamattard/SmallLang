@@ -5,6 +5,8 @@ public class TokenTypeTable {
   
     START(false),
     DIGIT(true),
+    IDENTIFIER(true),
+    SYMBOL(true),
     DIGITDOT(false),
     FLOAT(true),
     ERROR(false),
