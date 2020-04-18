@@ -15,7 +15,7 @@ public class App {
     SmallLangReader xfile = new SmallLangReader("example.smalllang");
     Lexer lexer = new Lexer(xfile);
     
-    for (int i = 0; i < 20; i++) {
+    for (int i = 0; i < 500; i++) {
       lexer.nextWord();
     }
 

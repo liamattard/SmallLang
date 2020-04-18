@@ -14,6 +14,7 @@ public class Lexer {
   private State state;
   private Stack<State> stack = new Stack<State>();
 
+
   private SmallLangReader file;
 
   public Lexer(SmallLangReader file) {
@@ -31,7 +32,6 @@ public class Lexer {
     stack.push(State.BAD);
 
     while (state != State.ERROR) {
-
 
       char c = file.nextChar();
       lexeme += c;
@@ -54,7 +54,7 @@ public class Lexer {
 
     if (state.isAcceptState()) {
       System.out.print("Lexeme = ");
-      System.out.print(lexeme);
+      System.out.print(lexeme + "\t\t\t | \t\t");
       System.out.print(" State = ");
       System.out.println(state.toString());
     }

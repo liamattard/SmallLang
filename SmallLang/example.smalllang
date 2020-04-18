@@ -1,4 +1,4 @@
-ff Square(x:float) : float {
+1.ff Square(x:float) : float {
   return x∗x;
 }
 
@@ -7,7 +7,6 @@ ff XGreaterThanY(x:float, y:float) : auto {
   if (y > x) { ans = false; }
   return ans;
 }
-
 ff AverageOfThree(x:float , y:float , z:float) : float {
   let total:float = x + y + z;
   return total/3;

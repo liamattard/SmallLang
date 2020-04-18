@@ -1,10 +1,14 @@
 package app.lexer.filetools;
 
+import app.lexer.tables.ClassifierTable;
+import app.lexer.tables.ClassifierTable.Type;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+
 
 public class SmallLangReader {
 
@@ -65,7 +69,8 @@ public class SmallLangReader {
     // If line is null, load next line...
     if (line == null) {
       if (smallLangScanner.hasNextLine()) {
-        final String data = smallLangScanner.nextLine();
+
+        String data = smallLangScanner.nextLine();
         /*
          * Comment Finder String commentRegex = "^\\/\\/"; final Pattern comment =
          * Pattern.compile(commentRegex); final Matcher foundComment =
@@ -77,22 +82,24 @@ public class SmallLangReader {
          * p.matcher(data); Symbol Splitter final String[] x =
          * data.split("((?<=[^A-Za-z0-9.])|(?=[^A-Za-z0-9.]))");
          */
-
-        if (data.length() != 0) {
-          line = new ArrayList<>();
-          char[] letters = data.toCharArray();
-
-          for (char c : letters) {
-            line.add(c);
-          }
-
-          character = line.get(0);
-          rollbackChar = line.get(0);
-          line.remove(0);
-
+        while (data.length() == 0) {
+          data = smallLangScanner.nextLine();
         }
 
+        line = new ArrayList<>();
+        char[] letters = data.toCharArray();
+
+        for (char c : letters) {
+          line.add(c);
+        }
+        line.add('\n');
+
+        character = line.get(0);
+        rollbackChar = line.get(0);
+        line.remove(0);
+
       } else {
+        System.out.println("aaaaaa");
         closed = true;
         smallLangScanner.close();
 
@@ -103,10 +110,12 @@ public class SmallLangReader {
   }
 
   /**
-   * aa.
+   * Adds lost character back to the list, unless it is a whitespace in which it
+   * is ignored.
    */
   public void rollBack() {
-    if (closed == false && rollbackChar != ' ') {
+    if (closed == false && ClassifierTable.getType(rollbackChar) != Type.WHITESPACE
+        && ClassifierTable.getType(rollbackChar) != Type.NEWLINE) {
       line.add(0, rollbackChar);
     }
 
