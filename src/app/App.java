@@ -3,8 +3,6 @@ package app;
 import app.lexer.Lexer;
 import app.lexer.filetools.SmallLangReader;
 
-// import java.io.*;
-// import java.util.*;
 
 public class App {
   /**
@@ -15,9 +13,9 @@ public class App {
     SmallLangReader xfile = new SmallLangReader("example.smalllang");
     Lexer lexer = new Lexer(xfile);
     
-    for (int i = 0; i < 500; i++) {
-      lexer.nextWord();
-    }
+      for (int i = 0; i < 500; i++) {
+        System.out.println(lexer.getNextToken().toString());
+      }
 
 
   }

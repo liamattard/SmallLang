@@ -1,4 +1,4 @@
-1.ff Square(x:float) : float {
+ff Square(x:float) : float {
   return x∗x;
 }
 

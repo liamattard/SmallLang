@@ -1,6 +1,9 @@
 package app.lexer;
 
 import app.lexer.filetools.SmallLangReader;
+import app.lexer.models.Attributes;
+import app.lexer.models.Token;
+import app.lexer.models.TokenType;
 import app.lexer.tables.ClassifierTable;
 import app.lexer.tables.ClassifierTable.Type;
 import app.lexer.tables.TokenTypeTable.State;
@@ -9,11 +12,11 @@ import app.lexer.tables.TransitionTable;
 import java.util.Stack;
 
 public class Lexer {
-
+  
+  private Token token = null;
   private String lexeme;
   private State state;
   private Stack<State> stack = new Stack<State>();
-
 
   private SmallLangReader file;
 
@@ -25,7 +28,7 @@ public class Lexer {
    * Follows the Table driven lexer pseudo-code from the slide notes.
    */
   public void nextWord() {
-
+    
     state = State.START;
     lexeme = "";
     stack.clear();
@@ -39,7 +42,6 @@ public class Lexer {
       if (state.isAcceptState()) {
         stack.clear();
       }
-
       stack.push(state);
       Type cat = ClassifierTable.getType(c);
       state = TransitionTable.transition(state, cat);
@@ -49,22 +51,36 @@ public class Lexer {
     while (!state.isAcceptState() && state != State.BAD) {
       state = stack.pop();
       truncate();
-      file.rollBack();
+      file.rollBack(state);
     }
 
     if (state.isAcceptState()) {
-      System.out.print("Lexeme = ");
-      System.out.print(lexeme + "\t\t\t | \t\t");
-      System.out.print(" State = ");
-      System.out.println(state.toString());
+      file.clearRollBack(lexeme);
+      setToken();
     }
 
   }
-  
+
+  private void setToken(){
+    TokenType tokenType = TokenType.getTokenType(state, lexeme);
+    if(tokenType != TokenType.COMMENT){
+      token = new Token();
+      token.setTokenType(tokenType);
+      token.setAttributes(new Attributes(lexeme, file.getLineNumber(), file.getCharacterNumber()));
+    }
+  }
+
   private void truncate() {
     if (lexeme.length() > 0) {
       lexeme = lexeme.substring(0, lexeme.length() - 1);
     }
   }
 
+  public Token getNextToken(){
+    token = null;
+    while(token == null) {
+      nextWord();
+    }
+    return token;
+  }
 }

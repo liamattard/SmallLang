@@ -1,5 +1,6 @@
 package app.lexer.tables;
 
+import app.lexer.tables.TokenTypeTable.State;
 
 public class ClassifierTable {
 
@@ -19,6 +20,7 @@ public class ClassifierTable {
     MULTIPLICATIVEOP,
     ADDITIVEOP,
     OTHER;
+    
   }
 
   /**
@@ -59,5 +61,6 @@ public class ClassifierTable {
     }
     return Type.OTHER;
   }
+
 
 }
