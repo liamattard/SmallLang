@@ -1,6 +1,5 @@
 package app.lexer.tables;
 
-import app.lexer.tables.TokenTypeTable.State;
 
 public class ClassifierTable {
 
