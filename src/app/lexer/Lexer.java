@@ -61,9 +61,9 @@ public class Lexer {
 
   }
 
-  private void setToken(){
+  private void setToken() {
     TokenType tokenType = TokenType.getTokenType(state, lexeme);
-    if(tokenType != TokenType.COMMENT){
+    if (tokenType != TokenType.COMMENT) {
       token = new Token();
       token.setTokenType(tokenType);
       token.setAttributes(new Attributes(lexeme, file.getLineNumber(), file.getCharacterNumber()));
@@ -76,9 +76,14 @@ public class Lexer {
     }
   }
 
-  public Token getNextToken(){
+  /**
+   * Runs the nextWord method multiple times untill a token is recieved
+   * from the method.
+   * @return Token
+   */
+  public Token getNextToken()  {
     token = null;
-    while(token == null) {
+    while (token == null) {
       nextWord();
     }
     return token;

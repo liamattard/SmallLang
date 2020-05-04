@@ -4,11 +4,18 @@ import app.lexer.tables.TokenTypeTable.State;
 
 public enum TokenType {
 
-  BOOLENALITERAL, INTEGERLITERAL, FLOATLITERAL, TYPE, AUTO, IDENTIFIER, MULTIPLICATIVEOP, ADDITIVEOP, RELATIONALOP,
-  SYMBOL, FUNCTIONCALL, WHILE, FOR, IF, ELSE, COMMENT, RETURN, PRINT, LET;
-  
+  BOOLENALITERAL, INTEGERLITERAL, FLOATLITERAL, TYPE, AUTO, 
+  IDENTIFIER, MULTIPLICATIVEOP, ADDITIVEOP, RELATIONALOP,
+  SYMBOL, FF, WHILE, FOR, IF, ELSE, COMMENT, RETURN, PRINT, LET,
+  OPENBRACKETS, CLOSEDBRACKETS, COLON;
+
   // TODO: EOF TOKEN AND ERROR TOKEN
 
+  /**
+   * Get the type of a token from the state and the lexeme.
+   * 
+   * @return TokenType
+   */
   public static TokenType getTokenType(State state, String lexeme) {
 
     if (state == State.IDENTIFIER) {
@@ -31,8 +38,8 @@ public enum TokenType {
       } else if (lexeme.equals("while")) {
         return WHILE;
       } else if (lexeme.equals("ff")) {
-        return FUNCTIONCALL;
-      } else if (lexeme.equals("return")){
+        return FF;
+      } else if (lexeme.equals("return")) {
         return RETURN;
       } else {
         return IDENTIFIER;
@@ -45,12 +52,21 @@ public enum TokenType {
       return FLOATLITERAL;
     } else if (state == State.COMMENT) {
       return COMMENT;
-    } else if (state == State.GREATERTHAN || state == State.RELATION || state == State.SMALLERTHAN) {
+    } else if (state == State.GREATERTHAN || state == State.RELATION
+          || state == State.SMALLERTHAN) {
       return RELATIONALOP;
     } else if (state == State.SLASH) {
       return MULTIPLICATIVEOP;
     } else if (state == State.SYMBOL) {
-      return SYMBOL;
+      if (lexeme.equals("{")) {
+        return OPENBRACKETS;
+      } else if (lexeme.equals("}")) {
+        return CLOSEDBRACKETS;
+      } else if (lexeme.equals(":")){
+        return COLON;
+      } else {
+        return SYMBOL;
+      }
     }
 
     return null;

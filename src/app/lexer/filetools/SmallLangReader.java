@@ -23,7 +23,6 @@ public class SmallLangReader {
     readFile(filename);
   }
 
-
   public int getLineNumber() {
     return this.lineNumber;
   }
