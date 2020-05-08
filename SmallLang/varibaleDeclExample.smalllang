@@ -1,1 +1,1 @@
-let x : float
+let sample: float = 2 + 4 * 4;

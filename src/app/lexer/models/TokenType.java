@@ -7,7 +7,8 @@ public enum TokenType {
   BOOLENALITERAL, INTEGERLITERAL, FLOATLITERAL, TYPE, AUTO, 
   IDENTIFIER, MULTIPLICATIVEOP, ADDITIVEOP, RELATIONALOP,
   SYMBOL, FF, WHILE, FOR, IF, ELSE, COMMENT, RETURN, PRINT, LET,
-  OPENBRACKETS, CLOSEDBRACKETS, COLON;
+  OPENBRACKETS, CLOSEDBRACKETS, COLON, OPENPARENTHESIS, CLOSEPARENTHESIS,
+  NOT, EQUALS;
 
   // TODO: EOF TOKEN AND ERROR TOKEN
 
@@ -41,13 +42,15 @@ public enum TokenType {
         return FF;
       } else if (lexeme.equals("return")) {
         return RETURN;
+      } else if (lexeme.equals("not")) {
+        return NOT;
       } else {
         return IDENTIFIER;
       }
     } else if (state == State.DIGIT) {
       return INTEGERLITERAL;
     } else if (state == State.EQUALS) {
-      return SYMBOL;
+      return EQUALS;
     } else if (state == State.FLOAT) {
       return FLOATLITERAL;
     } else if (state == State.COMMENT) {
@@ -62,8 +65,16 @@ public enum TokenType {
         return OPENBRACKETS;
       } else if (lexeme.equals("}")) {
         return CLOSEDBRACKETS;
-      } else if (lexeme.equals(":")){
+      } else if (lexeme.equals(":")) {
         return COLON;
+      } else if (lexeme.equals("(")) {
+        return OPENPARENTHESIS;
+      } else if (lexeme.equals(")")) {
+        return CLOSEPARENTHESIS; 
+      } else if (lexeme.equals("+") || lexeme.equals("/")) {
+        return ADDITIVEOP;
+      } else if (lexeme.equals("*") || lexeme.equals("-")) {
+        return MULTIPLICATIVEOP;
       } else {
         return SYMBOL;
       }
