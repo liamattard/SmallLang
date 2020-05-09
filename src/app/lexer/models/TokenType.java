@@ -4,11 +4,11 @@ import app.lexer.tables.TokenTypeTable.State;
 
 public enum TokenType {
 
-  BOOLENALITERAL, INTEGERLITERAL, FLOATLITERAL, TYPE, AUTO, 
-  IDENTIFIER, MULTIPLICATIVEOP, ADDITIVEOP, RELATIONALOP,
-  SYMBOL, FF, WHILE, FOR, IF, ELSE, COMMENT, RETURN, PRINT, LET,
-  OPENBRACKETS, CLOSEDBRACKETS, COLON, OPENPARENTHESIS, CLOSEPARENTHESIS,
-  NOT, EQUALS;
+  BOOLENALITERAL, INTEGERLITERAL, FLOATLITERAL, 
+  TYPE, AUTO, IDENTIFIER, MULTIPLICATIVEOP, ADDITIVEOP, RELATIONALOP,
+  SYMBOL, FF, WHILE, FOR, IF, ELSE, COMMENT,
+  RETURN, PRINT, LET, OPENBRACKETS, CLOSEDBRACKETS, COLON, OPENPARENTHESIS,
+  CLOSEPARENTHESIS, NOT, EQUALS, SEMICOLON, COMMA;
 
   // TODO: EOF TOKEN AND ERROR TOKEN
 
@@ -30,6 +30,8 @@ public enum TokenType {
         return MULTIPLICATIVEOP;
       } else if (lexeme.equals("or")) {
         return ADDITIVEOP;
+      } else if (lexeme.equals("if")) {
+        return IF;
       } else if (lexeme.equals("let")) {
         return LET;
       } else if (lexeme.equals("print")) {
@@ -44,6 +46,8 @@ public enum TokenType {
         return RETURN;
       } else if (lexeme.equals("not")) {
         return NOT;
+      } else if (lexeme.equals("else")) {
+        return ELSE;
       } else {
         return IDENTIFIER;
       }
@@ -55,8 +59,8 @@ public enum TokenType {
       return FLOATLITERAL;
     } else if (state == State.COMMENT) {
       return COMMENT;
-    } else if (state == State.GREATERTHAN || state == State.RELATION
-          || state == State.SMALLERTHAN) {
+    } else if (state == State.GREATERTHAN 
+        || state == State.RELATION || state == State.SMALLERTHAN) {
       return RELATIONALOP;
     } else if (state == State.SLASH) {
       return MULTIPLICATIVEOP;
@@ -70,11 +74,16 @@ public enum TokenType {
       } else if (lexeme.equals("(")) {
         return OPENPARENTHESIS;
       } else if (lexeme.equals(")")) {
-        return CLOSEPARENTHESIS; 
-      } else if (lexeme.equals("+") || lexeme.equals("/")) {
+        return CLOSEPARENTHESIS;
+      } else if (lexeme.equals("+") || lexeme.equals("-")) {
         return ADDITIVEOP;
-      } else if (lexeme.equals("*") || lexeme.equals("-")) {
+      } else if (lexeme.equals("*") || lexeme.equals("/")
+          || lexeme.equals("∗")) {
         return MULTIPLICATIVEOP;
+      } else if (lexeme.equals(";")) {
+        return SEMICOLON;
+      } else if (lexeme.equals(",")) {
+        return COMMA;
       } else {
         return SYMBOL;
       }

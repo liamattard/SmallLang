@@ -40,6 +40,74 @@ public class AstNodes {
 
   }
 
+  public static class AstAssignmentNode extends AstNode {
+
+    @Override
+    public String toString() {
+      return "AstAssignmentNode";
+    }
+
+  }
+
+  public static class AstPrintNode extends AstNode {
+
+    @Override
+    public String toString() {
+      return "AstPrintStatement";
+    }
+
+  }
+
+  public static class AstBlock extends AstNode {
+    int validity = 0;
+
+    public int getValidity() {
+      return validity;
+    }
+
+    public void setValidity(int validity) {
+      this.validity = validity;
+    }
+
+    @Override
+    public String toString() {
+      if (validity == 0) {
+        return "AstBlock";
+      } else {
+        return "AstBlock [validity=" + validity + "]";
+      }
+
+    }
+
+  }
+
+  public static class AstIfStatement extends AstNode {
+
+    @Override
+    public String toString() {
+      return "AstIfStatement []";
+    }
+
+  }
+
+  public static class AstForStatement extends AstNode {
+
+    @Override
+    public String toString() {
+      return "AstForStatement []";
+    }
+    
+  }
+  
+  public static class AstReturnNode extends AstNode {
+
+    @Override
+    public String toString() {
+      return "AstReturnNode []";
+    }
+
+  }
+
   public static class AstVariableDeclNode extends AstNode {
 
     Type type;
@@ -182,6 +250,89 @@ public class AstNodes {
     @Override
     public String toString() {
       return "ASTAdditiveOp [ operator " + getOperator() + "]";
+    }
+
+  }
+
+  public static class AstFunctionDecl extends AstNode {
+
+    private String functionName;
+    private Type type;
+
+    public String getFunctionName() {
+      return functionName;
+    }
+
+    public void setFunctionName(String functionName) {
+      this.functionName = functionName;
+    }
+
+    @Override
+    public String toString() {
+      return "AstFunctionDecl [functionName=" + functionName + ", type=" + type + "]";
+    }
+
+    public Type getType() {
+      return type;
+    }
+
+    public void setType(Type type) {
+      this.type = type;
+    }
+
+  }
+
+  public static class AstParam extends AstNode {
+    Type type;
+    String name;
+
+    public Type getT() {
+      return type;
+    }
+
+    public void setT(Type type) {
+      this.type = type;
+    }
+
+    public String getName() {
+      return name;
+    }
+
+    public void setName(String name) {
+      this.name = name;
+    }
+
+    @Override
+    public String toString() {
+      return "AstParam [name=" + name + ", type=" + type + "]";
+    }
+
+  }
+
+  public static class AstFunctionCall extends AstNode {
+
+    private String functionName;
+
+    @Override
+    public String toString() {
+      return "AstFunctionCall [functionName=" + getFunctionName() + "]";
+    }
+
+    public String getFunctionName() {
+      return functionName;
+    }
+
+    public void setFunctionName(String functionName) {
+      this.functionName = functionName;
+    }
+
+  }
+
+  public static class AstUnary extends AstNode {
+
+    @Override
+    public String toString() {
+      return "AstUnary";
     }
 
   }

@@ -1,1 +1,6 @@
-let sample: float = 2 + 4 * 4;
+{
+  if (2) {
+    print(u);
+  }
+  print y;
+}

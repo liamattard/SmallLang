@@ -5,7 +5,6 @@ import app.lexer.filetools.SmallLangReader;
 import app.parser.Parser;
 import app.parser.models.AstNodes.AstNode;
 
-
 public class App {
 
   /**
@@ -13,7 +12,7 @@ public class App {
    */
   public static void main(String[] args) throws Exception {
 
-    String filename = "varibaleDeclExample.smalllang";
+    String filename = "example.smalllang";
     SmallLangReader xfile = new SmallLangReader(filename);
     Lexer lexer = new Lexer(xfile);
     
@@ -23,9 +22,8 @@ public class App {
 
     AstNode tree = Parser.buildTree(lexer, filename);
 
-    Parser.printTree(tree);
+    Parser.printTree(tree, 0);
     
- 
   }
 
 }

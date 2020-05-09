@@ -5,14 +5,11 @@ import app.lexer.models.Token;
 import app.lexer.models.TokenType;
 import app.parser.models.AstNodes.*;
 import app.parser.models.Type;
-import java.util.HashMap;
-import java.util.Map;
 
 public class ParserTable {
 
   private Lexer lexer;
   private Token lookahead;
-  private Token exception;
 
   /**
    * Parser Tool's constructor which sets the current lexer.
@@ -33,8 +30,10 @@ public class ParserTable {
     AstNode astProgramNode = new AstProgramNode(name);
 
     // TODO: fix this loop
-    for (int i = 0; i < 1; i++) {
+    for (int i = 0; i < 9; i++) {
+      lookahead = lexer.getNextToken();
       astProgramNode.addItem(parseStatement());
+      
     }
 
     return astProgramNode;
@@ -43,7 +42,7 @@ public class ParserTable {
   private AstNode parseStatement() {
 
     final AstNode astStatementNode;
-    lookahead = lexer.getNextToken();
+
     TokenType token = lookahead.getTokenType();
 
     switch (token) {
@@ -52,20 +51,38 @@ public class ParserTable {
         astStatementNode = parseVariableDecl();
         break;
 
+      case IDENTIFIER:
+        astStatementNode = parseAssignment();
+        break;
+      
+      case PRINT:
+        astStatementNode = simpleStatement(new AstPrintNode());
+        break;
+
+      case RETURN:
+        astStatementNode = simpleStatement(new AstReturnNode());
+        break;
+
+      case OPENBRACKETS:
+        astStatementNode = parseBlock(0);
+        break;
+      
+      case FF:
+        astStatementNode = parseFunctionDecl();
+        break;
+      
+      case IF:
+        astStatementNode = parseIfStatement();
+        break;
+
       default:
         astStatementNode = null;
         System.out.println("ERROR excpected Statement, recieved " + lookahead.getTokenType());
         break;
     }
 
-    // tokenWithFunction.put(TokenType.IDENTIFIER, parseAssignment());
-    // tokenWithFunction.put(TokenType.PRINT, parsePrintStatement());
-    // tokenWithFunction.put(TokenType.IF, parseIfStatement());
     // tokenWithFunction.put(TokenType.FOR, parseForStatement());
     // tokenWithFunction.put(TokenType.WHILE, parseWhileStatement());
-    // tokenWithFunction.put(TokenType.RETURN, parseReturnStatement());
-    // tokenWithFunction.put(TokenType.FF, parseFunctionDecl());
-    // tokenWithFunction.put(TokenType.OPENBRACKETS, parseBlock());
 
     return astStatementNode;
   }
@@ -95,10 +112,11 @@ public class ParserTable {
           token = lookahead.getTokenType();
 
           if (token == TokenType.EQUALS) {
+            lookahead = lexer.getNextToken();
 
             AstNode expression = parseExpression();
 
-            if (exception.getTokenType() == TokenType.SYMBOL) {
+            if (lookahead.getTokenType() == TokenType.SEMICOLON) {
 
               astVaribaleDecl.addItem(expression);
 
@@ -127,22 +145,198 @@ public class ParserTable {
     return astVaribaleDecl;
   }
 
+  private AstNode parseAssignment() {
+
+    AstNode assignment = new AstAssignmentNode();
+    assignment.addItem(parseIdentifier(lookahead.getAttributes().getLexeme()));
+    lookahead = lexer.getNextToken();
+
+    if (lookahead.getTokenType() == TokenType.EQUALS) {
+
+      lookahead = lexer.getNextToken();
+      AstNode expression = parseExpression();
+      if (lookahead.getTokenType() == TokenType.SEMICOLON) {
+
+        assignment.addItem(expression);
+
+      } else {
+        System.out.println("Error, Expected semicolon");
+      }
+    } else {
+      System.out.println("Error expected Equals");
+    }
+    return assignment;
+  }
+
+  private AstNode parseIfStatement() {
+    AstNode ifStatement = new AstIfStatement();
+    lookahead = lexer.getNextToken();
+
+    if (lookahead.getTokenType() == TokenType.OPENPARENTHESIS) {
+      lookahead = lexer.getNextToken();
+      AstNode expression = parseExpression();
+      ifStatement.addItem(expression);
+
+      if (lookahead.getTokenType() == TokenType.CLOSEPARENTHESIS) {
+        lookahead = lexer.getNextToken();
+        AstNode trueBlock = parseBlock(1);
+       
+        ifStatement.addItem(trueBlock);
+        
+        lookahead = lexer.getNextToken();
+        if (lookahead.getTokenType() == TokenType.ELSE) {
+          lookahead = lexer.getNextToken();
+          AstNode falseBlock = parseBlock(2);
+          ifStatement.addItem(falseBlock);
+          lookahead = lexer.getNextToken();
+        } 
+        // System.out.println(lookahead.getAttributes().getLexeme());
+        
+
+      } else {
+        System.out.println("Error expected closed paranthesis in if statement");
+      }
+
+    } else {
+      System.out.println("Expected parathesis for if statment");
+    }
+    return ifStatement;
+  }
+
+  private AstNode simpleStatement(AstNode node) {
+    lookahead = lexer.getNextToken();
+    AstNode expression = parseExpression();
+    
+
+    if (lookahead.getTokenType() == TokenType.SEMICOLON) {
+      node.addItem(expression);
+    } else {
+      System.out.println("Error, Expected Semicolon after printstatement");
+    }
+    
+
+    return node;
+  }
+  
+  private AstNode parseBlock(int validity) {
+    AstBlock block = new AstBlock();
+    block.setValidity(validity);
+    lookahead = lexer.getNextToken();
+
+    while (lookahead.getTokenType() != TokenType.CLOSEDBRACKETS) {
+      
+      block.addItem(parseStatement());
+      
+      lookahead = lexer.getNextToken();
+      // System.out.println(lookahead.getAttributes().getLexeme());
+    }
+    
+    return block;
+  }
+
+  private AstNode parseFunctionDecl() {
+    
+    AstFunctionDecl function = new AstFunctionDecl();
+    lookahead = lexer.getNextToken();
+    
+    if (lookahead.getTokenType() == TokenType.IDENTIFIER) {
+      
+      function.setFunctionName(lookahead.getAttributes().getLexeme());
+      lookahead = lexer.getNextToken();
+
+      if (lookahead.getTokenType() == TokenType.OPENPARENTHESIS) {
+        boolean error = true;
+
+        while (error == true) {
+          lookahead = lexer.getNextToken();
+          AstNode param = parseFormalParam();
+          function.addItem(param);
+          lookahead = lexer.getNextToken();
+
+          if (lookahead.getTokenType() != TokenType.COMMA) {
+            if (lookahead.getTokenType() != TokenType.CLOSEPARENTHESIS) {
+              System.out.println("ERROR EXPECTED COMMA");
+              error = false;
+            } else {
+              error = false;
+            }
+          }
+          
+          
+        }
+        
+        lookahead = lexer.getNextToken();
+
+        if (lookahead.getTokenType() == TokenType.COLON) {
+
+          lookahead = lexer.getNextToken();
+          
+          if (lookahead.getTokenType() == TokenType.TYPE
+              || lookahead.getTokenType() == TokenType.AUTO) {
+            String lexeme = lookahead.getAttributes().getLexeme();
+
+            function.setType(Type.valueOf(lexeme.toUpperCase()));
+
+            lookahead = lexer.getNextToken();
+            function.addItem(parseBlock(0));
+          } else {
+            System.out.println("Expected Function Type or auto");
+          }
+          
+        } else {
+          System.out.println("Expected colon for function");
+        }
+
+      } else {
+        System.out.println("Error, Expected Open Brackets for start of program");
+      }
+    } else {
+      System.out.println("Error, Expected function name");
+    }
+    return function;
+  }
+  
+  private AstNode parseFormalParam() {
+
+    AstParam param = new AstParam();
+    param.setName(lookahead.getAttributes().getLexeme());
+    lookahead = lexer.getNextToken();
+
+    if (lookahead.getTokenType() == TokenType.COLON) {
+
+      lookahead = lexer.getNextToken();
+      
+      if (lookahead.getTokenType() == TokenType.TYPE) {
+        String lexeme = lookahead.getAttributes().getLexeme();
+        param.setT(Type.valueOf(lexeme.toUpperCase()));
+      }
+
+    } else {
+
+      System.out.println("Error, Expected colon for formalParam");
+
+    }
+
+    return param;
+  }
+
   private AstNode parseExpression() {
 
     AstNode expression = null;
     AstNode simpleExpression = parseSimpleExpression();
 
-    if (exception.getTokenType() != TokenType.RELATIONALOP) {
+    if (lookahead.getTokenType() != TokenType.RELATIONALOP) {
 
       expression = simpleExpression;
 
     } else {
 
       do {
-        expression = new AstRelationalOp(exception.getAttributes().getLexeme());
+        expression = new AstRelationalOp(lookahead.getAttributes().getLexeme());
         expression.addItem(simpleExpression);
-        expression.addItem(parseSimpleExpression());
-      } while (exception.getTokenType() == TokenType.RELATIONALOP);
+        lookahead = lexer.getNextToken();
+        expression.addItem(parseExpression());
+      } while (lookahead.getTokenType() == TokenType.RELATIONALOP);
 
     }
 
@@ -155,7 +349,7 @@ public class ParserTable {
 
     tempNode = parseTerm();
 
-    if (exception.getTokenType() != TokenType.ADDITIVEOP) {
+    if (lookahead.getTokenType() != TokenType.ADDITIVEOP) {
 
       simpleExpression = tempNode;
 
@@ -163,11 +357,12 @@ public class ParserTable {
 
       do {
 
-        simpleExpression = new AstAdditiveOp(exception.getAttributes().getLexeme());
+        simpleExpression = new AstAdditiveOp(lookahead.getAttributes().getLexeme());
         simpleExpression.addItem(tempNode);
+        lookahead = lexer.getNextToken();
         simpleExpression.addItem(parseSimpleExpression());
 
-      } while (exception.getTokenType() == TokenType.ADDITIVEOP);
+      } while (lookahead.getTokenType() == TokenType.ADDITIVEOP);
 
     }
 
@@ -180,17 +375,18 @@ public class ParserTable {
 
     AstNode tempNode = parseFactor();
 
-    if (exception.getTokenType() != TokenType.MULTIPLICATIVEOP) {
+    if (lookahead.getTokenType() != TokenType.MULTIPLICATIVEOP) {
 
       term = tempNode;
 
     } else {
 
       do {
-        term = new AstMultiplicativeOp(exception.getAttributes().getLexeme());
+        term = new AstMultiplicativeOp(lookahead.getAttributes().getLexeme());
         term.addItem(tempNode);
+        lookahead = lexer.getNextToken();
         term.addItem(parseTerm());
-      } while (exception.getTokenType() == TokenType.MULTIPLICATIVEOP);
+      } while (lookahead.getTokenType() == TokenType.MULTIPLICATIVEOP);
 
     }
 
@@ -204,12 +400,11 @@ public class ParserTable {
    */
   private AstNode parseFactor() {
 
-    lookahead = lexer.getNextToken();
-    exception = lexer.getNextToken();
     AstNode factorNode = null;
     TokenType token = lookahead.getTokenType();
     String lexeme = lookahead.getAttributes().getLexeme();
 
+    lookahead = lexer.getNextToken();
     switch (token) {
 
       case BOOLENALITERAL:
@@ -225,30 +420,87 @@ public class ParserTable {
         break;
 
       case IDENTIFIER:
-        factorNode = identifierOrFunctionCall();
+        factorNode = identifierOrFunctionCall(lexeme);
+        break;
+
+      case OPENPARENTHESIS:
+        factorNode = parseSubExpression();
+        break;
+
+      case NOT:
+        factorNode = parseUnary();
         break;
 
       default:
-        System.out.println("ERROR");
+        System.out.println("ERROR in Factor");
         break;
     }
 
     return factorNode;
   }
 
+  private AstNode parseUnary() {
+    AstNode unary = new AstUnary();
+    unary.addItem(parseExpression());
+
+    return unary;
+  }
+
+  private AstNode parseSubExpression() {
+
+    AstNode subexpression = parseExpression();
+
+    if (lookahead.getTokenType() == TokenType.CLOSEPARENTHESIS) {
+      lookahead = lexer.getNextToken();
+      return subexpression;
+
+    } else {
+      System.out.println("Error, expected closed brackets for subexpression");
+      return null;
+    }
+  }
+
   private AstNode parseIdentifier(String name) {
     return new IdentifierNode(name);
   }
 
-  private AstNode identifierOrFunctionCall() {
+  private AstNode parseFunctionCall(String name) {
 
-    String name = lookahead.getAttributes().getLexeme();
+    AstFunctionCall functionCall = new AstFunctionCall();
+    functionCall.setFunctionName(name);
+    lookahead = lexer.getNextToken();
 
-    if (exception.getTokenType() == TokenType.OPENPARENTHESIS) {
-      // Parse Functioncall
-      return null;
+    boolean error = false;
+
+    while (error != true) {
+      
+      functionCall.addItem(parseExpression());
+      
+      if (lookahead.getTokenType() != TokenType.COMMA) {
+        if (lookahead.getTokenType() != TokenType.CLOSEPARENTHESIS) {
+          System.out.println("Error, excpected COMMA");
+          error = true;
+        } else {
+
+          error = true;
+
+        }
+      }
+      lookahead = lexer.getNextToken();
+    }
+    return functionCall;
+  }
+
+  private AstNode identifierOrFunctionCall(String name) {
+
+    if (lookahead.getTokenType() == TokenType.OPENPARENTHESIS) {
+
+      return parseFunctionCall(name);
+
     } else {
+
       return parseIdentifier(name);
+
     }
   }
 

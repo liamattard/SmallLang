@@ -25,6 +25,7 @@ public enum OperatorTypes {
 
     // Muliplicative Op
     stringByOperator.put("*", TIMES);
+    stringByOperator.put("∗", TIMES);
     stringByOperator.put("/", DIVISION);
     stringByOperator.put("and", AND);
 

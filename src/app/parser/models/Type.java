@@ -1,7 +1,7 @@
 package app.parser.models;
 
 public enum Type {
-  BOOLEAN,
+  BOOL,
   INTEGER,
   FLOAT,
   AUTO;

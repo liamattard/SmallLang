@@ -32,10 +32,10 @@ public class Token {
 
   @Override
   public String toString() {
-    return "{" +
-      " attributes='" + getAttributes() + "'" +
-      ", tokenType='" + getTokenType() + "'" +
-      "}";
+    return "{" 
+      + " attributes='" + getAttributes() + "'" 
+      + ", tokenType='" + getTokenType() + "'" 
+      + "}";
   }
 
   
