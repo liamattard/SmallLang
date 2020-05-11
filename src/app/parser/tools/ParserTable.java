@@ -30,8 +30,9 @@ public class ParserTable {
     AstNode astProgramNode = new AstProgramNode(name);
 
     // TODO: fix this loop
+    lookahead = lexer.getNextToken();
     for (int i = 0; i < 9; i++) {
-      lookahead = lexer.getNextToken();
+      
       astProgramNode.addItem(parseStatement());
       
     }
@@ -141,6 +142,8 @@ public class ParserTable {
     } else {
       System.out.println("ERROR, no identifier found");
     }
+    
+    lookahead = lexer.getNextToken();
 
     return astVaribaleDecl;
   }
@@ -165,6 +168,8 @@ public class ParserTable {
     } else {
       System.out.println("Error expected Equals");
     }
+    lookahead = lexer.getNextToken();
+    
     return assignment;
   }
 
@@ -183,12 +188,13 @@ public class ParserTable {
        
         ifStatement.addItem(trueBlock);
         
-        lookahead = lexer.getNextToken();
+        // lookahead = lexer.getNextToken();
+        
         if (lookahead.getTokenType() == TokenType.ELSE) {
           lookahead = lexer.getNextToken();
           AstNode falseBlock = parseBlock(2);
           ifStatement.addItem(falseBlock);
-          lookahead = lexer.getNextToken();
+          // lookahead = lexer.getNextToken();
         } 
         // System.out.println(lookahead.getAttributes().getLexeme());
         
@@ -214,7 +220,7 @@ public class ParserTable {
       System.out.println("Error, Expected Semicolon after printstatement");
     }
     
-
+    lookahead = lexer.getNextToken();
     return node;
   }
   
@@ -227,10 +233,10 @@ public class ParserTable {
       
       block.addItem(parseStatement());
       
-      lookahead = lexer.getNextToken();
       // System.out.println(lookahead.getAttributes().getLexeme());
     }
     
+    lookahead = lexer.getNextToken();
     return block;
   }
 
@@ -293,6 +299,7 @@ public class ParserTable {
     } else {
       System.out.println("Error, Expected function name");
     }
+    // lookahead = lexer.getNextToken();
     return function;
   }
   

@@ -73,8 +73,10 @@ public class AstNodes {
     public String toString() {
       if (validity == 0) {
         return "AstBlock";
+      } else if (validity == 1) {
+        return "AstBlock [ validity = True ]";
       } else {
-        return "AstBlock [validity=" + validity + "]";
+        return "AstBlock [ validity = False ]";
       }
 
     }
@@ -85,7 +87,7 @@ public class AstNodes {
 
     @Override
     public String toString() {
-      return "AstIfStatement []";
+      return "AstIfStatement";
     }
 
   }
@@ -94,7 +96,7 @@ public class AstNodes {
 
     @Override
     public String toString() {
-      return "AstForStatement []";
+      return "AstForStatement ";
     }
     
   }
@@ -103,7 +105,7 @@ public class AstNodes {
 
     @Override
     public String toString() {
-      return "AstReturnNode []";
+      return "AstReturnNode ";
     }
 
   }
