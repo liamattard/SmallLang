@@ -4,6 +4,8 @@ import app.lexer.Lexer;
 import app.lexer.filetools.SmallLangReader;
 import app.parser.Parser;
 import app.parser.models.AstNodes.AstNode;
+import app.visitor.XmlVisitor;
+
 
 public class App {
 
@@ -15,15 +17,18 @@ public class App {
     String filename = "example.smalllang";
     SmallLangReader xfile = new SmallLangReader(filename);
     Lexer lexer = new Lexer(xfile);
-    
+
     // for (int i = 0; i < 500; i++) {
-    //   System.out.println(lexer.getNextToken().toString());
+    // System.out.println(lexer.getNextToken().toString());
     // }
 
     AstNode tree = Parser.buildTree(lexer, filename);
 
-    Parser.printTree(tree, 0);
-    
+    // Parser.printTree(tree, 0);
+    XmlVisitor visitor = new XmlVisitor();
+
+    visitor.buildXml(tree, visitor);
+
   }
 
 }

@@ -31,7 +31,7 @@ public class ParserTable {
 
     // TODO: fix this loop
     lookahead = lexer.getNextToken();
-    for (int i = 0; i < 9; i++) {
+    for (int i = 0; i < 8; i++) {
       
       astProgramNode.addItem(parseStatement());
       

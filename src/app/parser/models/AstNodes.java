@@ -3,9 +3,14 @@ package app.parser.models;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.w3c.dom.Element;
+
+import app.visitor.Visitable;
+import app.visitor.Visitor;
+
 public class AstNodes {
 
-  public abstract static class AstNode {
+  public abstract static class AstNode implements Visitable {
 
     private List<AstNode> children = new ArrayList<AstNode>();
 
@@ -38,6 +43,11 @@ public class AstNodes {
       return "AstProgramNode [name=" + name + "]";
     }
 
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
+    }
+
   }
 
   public static class AstAssignmentNode extends AstNode {
@@ -45,6 +55,11 @@ public class AstNodes {
     @Override
     public String toString() {
       return "AstAssignmentNode";
+    }
+
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
     }
 
   }
@@ -56,6 +71,10 @@ public class AstNodes {
       return "AstPrintStatement";
     }
 
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
+    }
   }
 
   public static class AstBlock extends AstNode {
@@ -81,6 +100,11 @@ public class AstNodes {
 
     }
 
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
+    }
+
   }
 
   public static class AstIfStatement extends AstNode {
@@ -88,6 +112,11 @@ public class AstNodes {
     @Override
     public String toString() {
       return "AstIfStatement";
+    }
+
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
     }
 
   }
@@ -98,14 +127,24 @@ public class AstNodes {
     public String toString() {
       return "AstForStatement ";
     }
-    
+
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
+    }
+
   }
-  
+
   public static class AstReturnNode extends AstNode {
 
     @Override
     public String toString() {
       return "AstReturnNode ";
+    }
+
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
     }
 
   }
@@ -121,6 +160,15 @@ public class AstNodes {
 
     public void setType(Type type) {
       this.type = type;
+    }
+
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
+    }
+
+    public Type getType() {
+      return type;
     }
 
   }
@@ -146,6 +194,11 @@ public class AstNodes {
       this.name = name;
     }
 
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
+    }
+
   }
 
   public abstract static class Literal extends AstNode {
@@ -159,6 +212,7 @@ public class AstNodes {
       return literal;
     }
 
+
   }
 
   public static class AstIntLiteral extends Literal {
@@ -170,6 +224,11 @@ public class AstNodes {
     @Override
     public String toString() {
       return "AstIntLiteral [ Literal " + getLiteral() + "]";
+    }
+
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
     }
 
   }
@@ -185,6 +244,11 @@ public class AstNodes {
       return "AstFloatLiteral [ Literal " + getLiteral() + "]";
     }
 
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
+    }
+
   }
 
   public static class AstBoolLiteral extends Literal {
@@ -196,6 +260,11 @@ public class AstNodes {
     @Override
     public String toString() {
       return "AstBoolLiteral [ Literal " + getLiteral() + "]";
+    }
+
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
     }
 
   }
@@ -215,6 +284,7 @@ public class AstNodes {
       return operator;
     }
 
+   
   }
 
   public static class AstMultiplicativeOp extends Operator {
@@ -227,6 +297,12 @@ public class AstNodes {
     public String toString() {
       return "ASTMultiplicativeOp [ Type : " + getOperator() + " ]";
     }
+
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
+    }
+
 
   }
 
@@ -241,6 +317,12 @@ public class AstNodes {
       return "ASTRelationalOp [ Operator :" + getOperator() + "]";
     }
 
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
+    }
+
+
   }
 
   public static class AstAdditiveOp extends Operator {
@@ -253,6 +335,12 @@ public class AstNodes {
     public String toString() {
       return "ASTAdditiveOp [ operator " + getOperator() + "]";
     }
+
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
+    }
+
 
   }
 
@@ -282,6 +370,12 @@ public class AstNodes {
       this.type = type;
     }
 
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
+    }
+
+
   }
 
   public static class AstParam extends AstNode {
@@ -309,6 +403,12 @@ public class AstNodes {
       return "AstParam [name=" + name + ", type=" + type + "]";
     }
 
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
+    }
+
+
   }
 
   public static class AstFunctionCall extends AstNode {
@@ -328,6 +428,12 @@ public class AstNodes {
       this.functionName = functionName;
     }
 
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
+    }
+
+
   }
 
   public static class AstUnary extends AstNode {
@@ -337,5 +443,12 @@ public class AstNodes {
       return "AstUnary";
     }
 
+    @Override
+    public Element accepts(Visitor visitor) {
+      return visitor.visit(this);
+    }
+
+
   }
+
 }
