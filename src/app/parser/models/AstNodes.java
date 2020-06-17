@@ -3,8 +3,6 @@ package app.parser.models;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.w3c.dom.Element;
-
 import app.visitor.Visitable;
 import app.visitor.Visitor;
 
@@ -44,8 +42,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
   }
@@ -58,8 +56,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
   }
@@ -72,8 +70,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
   }
 
@@ -101,8 +99,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
   }
@@ -115,8 +113,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
   }
@@ -129,8 +127,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
   }
@@ -143,8 +141,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
   }
@@ -163,8 +161,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
     public Type getType() {
@@ -195,8 +193,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
   }
@@ -227,8 +225,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
   }
@@ -245,8 +243,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
   }
@@ -263,8 +261,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
   }
@@ -299,8 +297,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
 
@@ -318,8 +316,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
 
@@ -337,8 +335,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
 
@@ -371,8 +369,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
 
@@ -404,8 +402,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
 
@@ -429,8 +427,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
 
@@ -444,8 +442,8 @@ public class AstNodes {
     }
 
     @Override
-    public Element accepts(Visitor visitor) {
-      return visitor.visit(this);
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
     }
 
 

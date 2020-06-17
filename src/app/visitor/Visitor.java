@@ -20,45 +20,44 @@ import app.parser.models.AstNodes.AstUnary;
 import app.parser.models.AstNodes.AstVariableDeclNode;
 import app.parser.models.AstNodes.IdentifierNode;
 
-import org.w3c.dom.Element;
-
 public interface Visitor {
 
-  public Element visit(AstProgramNode programNode);
+  public void visit(AstProgramNode programNode);
 
-  public Element visit(AstVariableDeclNode variableDeclNode);
+  public void visit(AstVariableDeclNode variableDeclNode);
 
-  public Element visit(AstAssignmentNode assignmentNode);
+  public void visit(AstAssignmentNode assignmentNode);
 
-  public Element visit(AstBlock block);
+  public void visit(AstBlock block);
 
-  public Element visit(AstIfStatement ifStatement);
+  public void visit(AstIfStatement ifStatement);
 
-  public Element visit(AstAdditiveOp additiveOperator);
+  public void visit(AstAdditiveOp additiveOperator);
 
-  public Element visit(AstBoolLiteral boolLiteral);
+  public void visit(AstBoolLiteral boolLiteral);
 
-  public Element visit(AstFloatLiteral astFloatLiteral);
+  public void visit(AstFloatLiteral astFloatLiteral);
 
-  public Element visit(AstForStatement forStatement);
+  public void visit(AstForStatement forStatement);
 
-  public Element visit(AstFunctionCall functionCall);
+  public void visit(AstFunctionCall functionCall);
 
-  public Element visit(AstFunctionDecl functionDecl);
+  public void visit(AstFunctionDecl functionDecl);
 
-  public Element visit(AstIntLiteral intLiteral);
+  public void visit(AstIntLiteral intLiteral);
 
-  public Element visit(AstMultiplicativeOp multiplicativeOp);
+  public void visit(AstMultiplicativeOp multiplicativeOp);
 
-  public Element visit(AstParam param);
+  public void visit(AstParam param);
 
-  public Element visit(AstPrintNode printNode);
+  public void visit(AstPrintNode printNode);
 
-  public Element visit(AstRelationalOp relationalOp);
+  public void visit(AstRelationalOp relationalOp);
 
-  public Element visit(AstReturnNode returnNode);
+  public void visit(AstReturnNode returnNode);
 
-  public Element visit(AstUnary unary);
+  public void visit(AstUnary unary);
 
-  public Element visit(IdentifierNode identifier);
+  public void visit(IdentifierNode identifier);
+
 }

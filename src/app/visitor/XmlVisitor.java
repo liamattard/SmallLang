@@ -22,7 +22,6 @@ import app.parser.models.AstNodes.AstVariableDeclNode;
 import app.parser.models.AstNodes.IdentifierNode;
 
 import java.io.File;
-import java.util.List;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -38,7 +37,9 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 public class XmlVisitor implements Visitor {
- 
+
+  Element root;
+  Element current;
   private Visitor visitor;
   private Document doc;
 
@@ -59,8 +60,8 @@ public class XmlVisitor implements Visitor {
       DocumentBuilder docBuilder = docFactory.newDocumentBuilder();
 
       doc = docBuilder.newDocument();
-      Element rootElement = rootNode.accepts(visitor);
-      doc.appendChild(rootElement);
+      rootNode.accepts(visitor);
+      doc.appendChild(root);
 
       TransformerFactory transformerFactory = TransformerFactory.newInstance();
       Transformer transformer = transformerFactory.newTransformer();
@@ -68,7 +69,6 @@ public class XmlVisitor implements Visitor {
       StreamResult result = new StreamResult(new File("src/app/visitor/xmlfiles/program.xml"));
 
       transformer.transform(source, result);
-
 
     } catch (ParserConfigurationException pce) {
       pce.printStackTrace();
@@ -79,23 +79,37 @@ public class XmlVisitor implements Visitor {
   }
 
   @Override
-  public Element visit(AstProgramNode programNode) {
-    return visitWithOneAttr(programNode, "Program", "name", programNode.getName());
+  public void visit(AstProgramNode programNode) {
+
+    Element element = doc.createElement("Program");
+    Attr attr = doc.createAttribute("name");
+
+    attr.setValue(programNode.getName());
+    element.setAttributeNode(attr);
+    
+    root = element;
+    current = root;
+
+    for (AstNode astNode : programNode.getChildren()) {
+      astNode.accepts(visitor);
+      current = root;
+    }
+
   }
 
   @Override
-  public Element visit(AstVariableDeclNode variableDeclNode) {
+  public void visit(AstVariableDeclNode variableDeclNode) {
     String type = variableDeclNode.getType().toString();
-    return visitWithOneAttr(variableDeclNode, "VariableDeclaration", "Type", type);
+    visitWithOneAttr(variableDeclNode, "VariableDeclaration", "Type", type);
   }
 
   @Override
-  public Element visit(AstAssignmentNode assignmentNode) {
-    return visitWithNoAttr(assignmentNode, "AssignmentStatement");
+  public void visit(AstAssignmentNode assignmentNode) {
+    visitWithNoAttr(assignmentNode, "AssignmentStatement");
   }
 
   @Override
-  public Element visit(AstBlock block) {
+  public void visit(AstBlock block) {
 
     Element blockElement = doc.createElement("Block");
     if (block.getValidity() == 1) {
@@ -110,57 +124,59 @@ public class XmlVisitor implements Visitor {
       blockElement.setAttributeNode(validity);
     }
 
+    current.appendChild(blockElement);
+
+    current = blockElement;
     for (AstNode astNode : block.getChildren()) {
-      blockElement.appendChild(astNode.accepts(visitor));
+      astNode.accepts(visitor);
+      current = blockElement;
     }
 
-    return blockElement;
 
   }
 
   @Override
-  public Element visit(AstIfStatement ifStatement) {
+  public void visit(AstIfStatement ifStatement) {
 
-    return visitWithNoAttr(ifStatement, "IfStatement");
+    visitWithNoAttr(ifStatement, "IfStatement");
 
   }
 
   @Override
-  public Element visit(AstAdditiveOp additiveOperator) {
+  public void visit(AstAdditiveOp additiveOperator) {
     String operator = additiveOperator.getOperator().toString();
-    return visitWithOneAttr(additiveOperator, "AdditiveOp", "Operator", operator);
+    visitWithOneAttr(additiveOperator, "AdditiveOp", "Operator", operator);
 
   }
 
   @Override
-  public Element visit(AstBoolLiteral boolLiteral) {
+  public void visit(AstBoolLiteral boolLiteral) {
 
     String literal = boolLiteral.getLiteral();
-    return visitLiterals(boolLiteral, "BoolConst", literal);
+    visitLiterals(boolLiteral, "BoolConst", literal);
   }
 
   @Override
-  public Element visit(AstFloatLiteral astFloatLiteral) {
+  public void visit(AstFloatLiteral astFloatLiteral) {
     String literal = astFloatLiteral.getLiteral();
-    return visitLiterals(astFloatLiteral, "FloatConst", literal);
+    visitLiterals(astFloatLiteral, "FloatConst", literal);
   }
 
   @Override
-  public Element visit(AstForStatement forStatement) {
+  public void visit(AstForStatement forStatement) {
     // TODO Auto-generated method stub
-    return null;
   }
 
   @Override
-  public Element visit(AstFunctionCall functionCall) {
+  public void visit(AstFunctionCall functionCall) {
 
     String functionName = functionCall.getFunctionName();
 
-    return visitWithOneAttr(functionCall, "FunctionCall", "name", functionName);
+    visitWithOneAttr(functionCall, "FunctionCall", "name", functionName);
   }
 
   @Override
-  public Element visit(AstFunctionDecl functionDecl) {
+  public void visit(AstFunctionDecl functionDecl) {
     Element functionDeclElement = doc.createElement("FunctionDeclaration");
     Attr name = doc.createAttribute("name");
     Attr type = doc.createAttribute("type");
@@ -171,30 +187,33 @@ public class XmlVisitor implements Visitor {
     functionDeclElement.setAttributeNode(type);
     functionDeclElement.setAttributeNode(name);
 
+    current.appendChild(functionDeclElement);
+
+    current = functionDeclElement;
     for (AstNode astNode : functionDecl.getChildren()) {
-      functionDeclElement.appendChild(astNode.accepts(visitor));
+      astNode.accepts(visitor);
+      current = functionDeclElement;
     }
 
-    return functionDeclElement;
   }
 
   @Override
-  public Element visit(AstIntLiteral intLiteral) {
+  public void visit(AstIntLiteral intLiteral) {
 
     String literal = intLiteral.getLiteral();
-    return visitLiterals(intLiteral, "IntegerConst", literal);
+    visitLiterals(intLiteral, "IntegerConst", literal);
   }
 
   @Override
-  public Element visit(AstMultiplicativeOp multiplicativeOp) {
+  public void visit(AstMultiplicativeOp multiplicativeOp) {
 
     String operator = multiplicativeOp.getOperator().toString();
 
-    return visitWithOneAttr(multiplicativeOp, "MultiplicativeOp", "operator", operator);
+    visitWithOneAttr(multiplicativeOp, "MultiplicativeOp", "operator", operator);
   }
 
   @Override
-  public Element visit(AstParam param) {
+  public void visit(AstParam param) {
 
     Element paramElement = doc.createElement("Param");
     Attr name = doc.createAttribute("name");
@@ -204,83 +223,94 @@ public class XmlVisitor implements Visitor {
     name.setValue(param.getName());
     paramElement.setAttributeNode(type);
     paramElement.setAttributeNode(name);
+    current.appendChild(paramElement);
 
+    current = paramElement;
+
+    
     for (AstNode astNode : param.getChildren()) {
-      paramElement.appendChild(astNode.accepts(visitor));
+      astNode.accepts(visitor);
+      current = paramElement;
     }
 
-    return paramElement;
 
   }
 
   @Override
-  public Element visit(AstPrintNode printNode) {
-    return visitWithNoAttr(printNode, "PrintStatement");
+  public void visit(AstPrintNode printNode) {
+    visitWithNoAttr(printNode, "PrintStatement");
   }
 
   @Override
-  public Element visit(AstRelationalOp relationalOp) {
+  public void visit(AstRelationalOp relationalOp) {
 
     String operator = relationalOp.getOperator().toString();
 
-    return visitWithOneAttr(relationalOp, "RelationalOp", "operator", operator);
+    visitWithOneAttr(relationalOp, "RelationalOp", "operator", operator);
   }
 
   @Override
-  public Element visit(AstReturnNode returnNode) {
-    return visitWithNoAttr(returnNode, "ReturnNode");
+  public void visit(AstReturnNode returnNode) {
+    visitWithNoAttr(returnNode, "ReturnNode");
   }
 
   @Override
-  public Element visit(AstUnary unary) {
-    return visitWithNoAttr(unary, "Unary");
+  public void visit(AstUnary unary) {
+    visitWithNoAttr(unary, "Unary");
   }
 
   @Override
-  public Element visit(IdentifierNode identifier) {
+  public void visit(IdentifierNode identifier) {
     String name = identifier.getName();
-    return visitLiterals(identifier, "Identifier", name);
+    visitLiterals(identifier, "Identifier", name);
   }
 
-  private Element visitLiterals(AstNode node, String nodeTitle,
-      String literal) {
+  private void visitLiterals(AstNode node, String nodeTitle, String literal) {
 
-    Element assignmentElement = doc.createElement(nodeTitle);
-    assignmentElement.setTextContent(literal);
+    Element element = doc.createElement(nodeTitle);
+    element.setTextContent(literal);
+
+    current.appendChild(element);
+
+    current = element;
 
     for (AstNode astNode : node.getChildren()) {
-      assignmentElement.appendChild(astNode.accepts(visitor));
+      astNode.accepts(visitor);
+      current = element;
     }
 
-    return assignmentElement;
   }
 
-  private Element visitWithNoAttr(AstNode node, String nodeTitle) {
+  private void visitWithNoAttr(AstNode node, String nodeTitle) {
 
-    Element assignmentElement = doc.createElement(nodeTitle);
+    Element element = doc.createElement(nodeTitle);
+    current.appendChild(element);
+
+    current = element;
 
     for (AstNode astNode : node.getChildren()) {
-      assignmentElement.appendChild(astNode.accepts(visitor));
+      astNode.accepts(visitor);
+      current = element;
     }
-
-    return assignmentElement;
 
   }
 
-  private Element visitWithOneAttr(AstNode node,
-      String nodeTitle, String attrTitle, String attrValue) {
+  private void visitWithOneAttr(AstNode node, String nodeTitle,
+      String attrTitle, String attrValue) {
 
+    
     Element element = doc.createElement(nodeTitle);
     Attr attr = doc.createAttribute(attrTitle);
 
     attr.setValue(attrValue);
     element.setAttributeNode(attr);
-
+    current.appendChild(element);
+    
+    current = element;
     for (AstNode astNode : node.getChildren()) {
-      element.appendChild(astNode.accepts(visitor));
+      astNode.accepts(visitor);
+      current = element;
     }
-
-    return element;
 
   }
 }
