@@ -19,19 +19,19 @@ public class App {
     SmallLangReader xfile = new SmallLangReader(filename);
     Lexer lexer = new Lexer(xfile);
     
-    // for (int i = 0; i < 500; i++) {
-    //   System.out.println(lexer.getNextToken().toString());
-    // }
+    for (int i = 0; i < 500; i++) {
+      System.out.println(lexer.getNextToken().toString());
+    }
 
-    AstNode tree = Parser.buildTree(lexer, filename);
+    // AstNode tree = Parser.buildTree(lexer, filename);
     // Parser.printTree(tree, 0);
 
     // XmlVisitor visitor = new XmlVisitor();
     
     // visitor.buildXml(tree, visitor);
 
-    SymbolTableVisitor symbolTable = new SymbolTableVisitor();
-    symbolTable.checkSemantics(tree, symbolTable);
+    // SymbolTableVisitor symbolTable = new SymbolTableVisitor();
+    // symbolTable.checkSemantics(tree, symbolTable);
   }
 
 }
