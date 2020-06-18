@@ -24,14 +24,14 @@ public class App {
     // }
 
     AstNode tree = Parser.buildTree(lexer, filename);
-    Parser.printTree(tree, 0);
+    // Parser.printTree(tree, 0);
 
     // XmlVisitor visitor = new XmlVisitor();
     
     // visitor.buildXml(tree, visitor);
 
-    // SymbolTableVisitor symbolTable = new SymbolTableVisitor();
-    // symbolTable.checkSemantics(tree, symbolTable);
+    SymbolTableVisitor symbolTable = new SymbolTableVisitor();
+    symbolTable.checkSemantics(tree, symbolTable);
   }
 
 }

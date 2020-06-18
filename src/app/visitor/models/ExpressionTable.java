@@ -113,6 +113,14 @@ public class ExpressionTable {
 
         return ExpressionType.FLOAT;
 
+      } else if (typeOne == ExpressionType.FLOAT && typeTwo == ExpressionType.INT) {
+
+        return ExpressionType.FLOAT;
+
+      } else if (typeOne == ExpressionType.INT && typeTwo == ExpressionType.FLOAT) {
+
+        return ExpressionType.FLOAT;
+
       } else {
 
         System.out.println("ERROR IN TYPE");

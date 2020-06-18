@@ -3,6 +3,8 @@ package app.visitor.models;
 import app.parser.models.Type;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.Map;
 import java.util.Objects;
 
@@ -10,30 +12,34 @@ import java.util.Objects;
 
 public class FunctionIdentifier extends Identifier {
 
-  Map<VariableIdentifier, Type> parameters;
+  //Map<VariableIdentifier, Type> parameters;
+  List<Type> parameters;
 
   /**
    * Constructor which declares parameters to a new arraylist.
    */
   public FunctionIdentifier() {
 
-    parameters = new HashMap<VariableIdentifier, Type>();
+    //parameters = new HashMap<VariableIdentifier, Type>();
+    
+    parameters = new ArrayList<Type>();
+
 
   }
 
   /**
    * Add a new Parameter with its type to the function.
-   * @param identifier type name.
    * @param type type of the parameter.
    */
-  public void addParameter(VariableIdentifier identifier, Type type) {
+  public void addParameter(Type type) {
+    parameters.add(type);
 
-    parameters.put(identifier, type);
+    //parameters.put(identifier, type);
 
   }
 
 
-  public Map<VariableIdentifier,Type> getParameters() {
+  public List<Type> getParameters() {
     return this.parameters;
   }
   

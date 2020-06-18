@@ -52,20 +52,22 @@ public class SymbolTable {
 
     boolean found = false;
 
+
     for (Map<Identifier,Type> map : symbolTable) {
 
-      if (map.containsKey(identifier)) {
+      for (Map.Entry<Identifier,Type> entry: map.entrySet()) {
 
-        found = true;
-        
-        return map.get(identifier);
+        if (entry.getKey().equals(identifier)) {
+          found = true;
+          return entry.getValue();
+        }
       }
 
     }
 
-    if (found == false){
+    if (found == false) {
 
-        System.out.println("Error, " + identifier.getName() + ", Not Found" );
+      System.out.println("Error, " + identifier.getName() + ", Not Found" );
 
     }
 

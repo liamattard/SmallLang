@@ -24,6 +24,7 @@ import app.parser.models.Type;
 import app.visitor.models.ExpressionTable;
 import app.visitor.models.ExpressionType;
 import app.visitor.models.FunctionIdentifier;
+import app.visitor.models.Identifier;
 import app.visitor.models.VariableIdentifier;
 
 import java.util.List;
@@ -81,7 +82,13 @@ public class SymbolTableVisitor implements Visitor {
 
     }
 
-    type = currentExpression.getType();
+    if (currentExpression != null) {
+
+      type = currentExpression.getType();
+
+    }
+    
+    
     ExpressionType currentType = type;
     type = null;
 
@@ -105,6 +112,17 @@ public class SymbolTableVisitor implements Visitor {
 
     }
 
+    if (variableDeclNode.getType() != Type.AUTO) {
+      
+      if (variableType.toString() != variableDeclNode.getType().toString()){
+        System.out.println(
+                          "Type Error, Variable " + currentVariable.getName()
+                          + "expected " + variableDeclNode.getType().toString()
+        );
+      }
+
+          
+    } 
     symbolTable.insert(currentVariable, variableType);
 
     currentExpression = null;
@@ -118,6 +136,7 @@ public class SymbolTableVisitor implements Visitor {
 
     // Setting current variable
     children.get(0).accepts(visitor);
+    children.remove(0);
 
     VariableIdentifier assignmentVariable = new VariableIdentifier();
     assignmentVariable.setName(currentVariable.getName());
@@ -167,6 +186,11 @@ public class SymbolTableVisitor implements Visitor {
 
     type = currentExpression.getType();
     currentExpression = null;
+
+    if (type != ExpressionType.BOOL) {
+      System.out.println("Error in if statement, Expected Boolean");
+    }
+
     type = null;
 
     children.remove(0);
@@ -203,7 +227,48 @@ public class SymbolTableVisitor implements Visitor {
 
   @Override
   public void visit(AstFunctionCall functionCall) {
-    // TODO Auto-generated method stub
+
+    FunctionIdentifier identifier = new FunctionIdentifier();
+    identifier.setName(functionCall.getFunctionName());
+
+    List<AstNode> children = functionCall.getChildren();
+  
+    for (AstNode astNode: children) {
+
+      currentExpression = new ExpressionTable();
+
+      astNode.accepts(visitor);
+
+      if (currentExpression  !=  null) {
+
+        checkType(currentExpression.getType(), identifier);
+
+      } else {
+        checkType(type, identifier);
+      }
+
+        
+      currentExpression = null;
+
+
+    }
+
+    Type t = symbolTable.lookup(identifier);
+
+    if (t == Type.BOOL) { 
+      type = ExpressionType.BOOL;
+
+    }
+
+    if (t == Type.INTEGER) { 
+      type = ExpressionType.INT;
+
+    }
+
+    if (t == Type.FLOAT) { 
+      type = ExpressionType.FLOAT;
+
+    }
 
   }
 
@@ -250,6 +315,9 @@ public class SymbolTableVisitor implements Visitor {
 
         System.out.println("Error, function returned " + currentType + " Expected + ");
       }
+
+      symbolTable.pop();
+
     } else {
       if (currentType == ExpressionType.FLOAT) {
 
@@ -269,11 +337,11 @@ public class SymbolTableVisitor implements Visitor {
 
       }
 
+      symbolTable.pop();
       symbolTable.insert(identifier, functionType);
 
     }
 
-    symbolTable.pop();
 
   }
 
@@ -298,14 +366,18 @@ public class SymbolTableVisitor implements Visitor {
     }
 
     identifier.setName(param.getName());
-    currentFunction.addParameter(identifier, type);
+    currentFunction.addParameter(type);
     symbolTable.insert(identifier, type);
 
   }
 
   @Override
   public void visit(AstPrintNode printNode) {
-    // TODO Auto-generated method stub
+      List<AstNode> children = printNode.getChildren();
+
+      for(AstNode astNode: children){
+        astNode.accepts(visitor);
+      }
 
   }
 
@@ -400,4 +472,28 @@ public class SymbolTableVisitor implements Visitor {
     currentExpression.add(expressionType);
   }
 
+
+
+public void checkType(ExpressionType expressionType, FunctionIdentifier identifier){
+
+    if (expressionType == ExpressionType.INT){
+
+      identifier.addParameter(Type.INTEGER);
+
+    }
+
+    if (expressionType  == ExpressionType.FLOAT){
+
+
+      identifier.addParameter(Type.FLOAT);
+
+    }
+
+    if (expressionType == ExpressionType.BOOL){
+
+      identifier.addParameter(Type.BOOL);
+
+    }
+
+  }
 }
