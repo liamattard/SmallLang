@@ -1,3 +1,4 @@
+et x : char = 'x'; 
 ff XGreaterThanY(int toCompare[]) : auto {
   let ans : bool = false;
   if (toCompare[0] > toCompare[1])
@@ -18,8 +19,8 @@ ff Average(float toAverage[],int count):float {
   return total / count ;
 }
 
-let arr 1[2] : float;
-let arr 2 [4] : float = { 2.4 , 2.8 , 10.4 , 12.1 } ;
+let arr1[2] : float;
+let arr2[4] : float = { 2.4 , 2.8 , 10.4 , 12.1 } ;
 
 arr1[0] = 2.4;
 arr1[1] = 6.25;

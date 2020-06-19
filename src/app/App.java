@@ -15,16 +15,16 @@ public class App {
    */
   public static void main(String[] args) throws Exception {
     
-    String filename = "example.smalllang";
+    String filename = "arrayDecl.smalllang";
     SmallLangReader xfile = new SmallLangReader(filename);
     Lexer lexer = new Lexer(xfile);
     
-    for (int i = 0; i < 500; i++) {
-      System.out.println(lexer.getNextToken().toString());
-    }
+    // for (int i = 0; i < 500; i++) {
+      // System.out.println(lexer.getNextToken().toString());
+    // }
 
-    // AstNode tree = Parser.buildTree(lexer, filename);
-    // Parser.printTree(tree, 0);
+    AstNode tree = Parser.buildTree(lexer, filename);
+    Parser.printTree(tree, 0);
 
     // XmlVisitor visitor = new XmlVisitor();
     

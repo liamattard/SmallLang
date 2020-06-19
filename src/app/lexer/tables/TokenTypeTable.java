@@ -65,10 +65,13 @@ public class TokenTypeTable {
     GREATERTHAN(true),
     SMALLERTHAN(true),
     RELATION(true),
-    BAD(false);
+    BAD(false),
+    CHARONE(false),
+    CHARTWO(false),
+    CHAR(true);
     
     final boolean acceptState;
-  
+
     private State(boolean acceptState) {
       this.acceptState = acceptState;
     }

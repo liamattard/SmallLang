@@ -105,6 +105,20 @@ public class AstNodes {
 
   }
 
+  public static class AstArrayDecl extends AstNode {
+
+    @Override
+    public String toString() {
+        return "AstArrayDecl";
+    }
+
+    @Override
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
+    }
+
+  }
+
   public static class AstIfStatement extends AstNode {
 
     @Override
@@ -150,14 +164,27 @@ public class AstNodes {
   public static class AstVariableDeclNode extends AstNode {
 
     Type type;
+    int size = 0;
 
     @Override
     public String toString() {
-      return "AstVariableDeclNode [type=" + type + "]";
+        if (size > 0) {
+
+            return "AstVariableDeclNode [type=" + type + ", Size="+ size + "]" ;
+
+        } else {
+
+            return "AstVariableDeclNode [type=" + type +  "]";
+
+        }
     }
 
     public void setType(Type type) {
       this.type = type;
+    }
+
+    public void setSize(int size) {
+      this.size = size;  
     }
 
     @Override
@@ -167,6 +194,10 @@ public class AstNodes {
 
     public Type getType() {
       return type;
+    }
+
+    public int getSize(){
+      return size;
     }
 
   }
@@ -265,6 +296,23 @@ public class AstNodes {
       visitor.visit(this);
     }
 
+  }
+
+  public static class AstCharLiteral extends Literal {
+
+    public AstCharLiteral(String literal){
+      super(literal);
+    }
+
+    @Override
+    public String toString() {
+      return "AstCharLiteral[ Literal " + getLiteral() + "]";
+    }
+
+    @Override
+    public void accepts(Visitor visitor) {
+      visitor.visit(this);
+    }
   }
 
   public abstract static class Operator extends AstNode {
@@ -377,8 +425,18 @@ public class AstNodes {
   }
 
   public static class AstParam extends AstNode {
+
+    boolean isArray = false;
     Type type;
     String name;
+
+    public void setIsArray(boolean isArray){
+      this.isArray = isArray;
+    }
+
+    public boolean getIsArray(){
+      return isArray;
+    }
 
     public Type getT() {
       return type;
@@ -398,7 +456,11 @@ public class AstNodes {
 
     @Override
     public String toString() {
-      return "AstParam [name=" + name + ", type=" + type + "]";
+      if (isArray){
+        return "AstParam [name=" + name + ", type=" + type + ", isArray=" + isArray +" ]";
+      } else {
+        return "AstParam [name=" + name + ", type=" + type + "]";
+      }
     }
 
     @Override

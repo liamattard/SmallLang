@@ -4,11 +4,12 @@ import app.lexer.tables.TokenTypeTable.State;
 
 public enum TokenType {
 
-  BOOLENALITERAL, INTEGERLITERAL, FLOATLITERAL, 
+  BOOLENALITERAL, INTEGERLITERAL, FLOATLITERAL,  
   TYPE, AUTO, IDENTIFIER, MULTIPLICATIVEOP, ADDITIVEOP, RELATIONALOP,
   SYMBOL, FF, WHILE, FOR, IF, ELSE, COMMENT,
   RETURN, PRINT, LET, OPENBRACKETS, CLOSEDBRACKETS, COLON, OPENPARENTHESIS,
-  CLOSEPARENTHESIS, NOT, EQUALS, SEMICOLON, COMMA;
+  CLOSEPARENTHESIS, NOT, EQUALS, SEMICOLON, COMMA, CHARLITERAL,
+  OPENSQUAREBRACKETS,CLOSESQUAREBRACKETS;
 
   // TODO: EOF TOKEN AND ERROR TOKEN
 
@@ -20,7 +21,8 @@ public enum TokenType {
   public static TokenType getTokenType(State state, String lexeme) {
 
     if (state == State.IDENTIFIER) {
-      if (lexeme.equals("float") || lexeme.equals("int") || lexeme.equals("bool")) {
+      if (lexeme.equals("float") || lexeme.equals("int") || lexeme.equals("bool")
+          || lexeme.equals("char")) {
         return TYPE;
       } else if (lexeme.equals("auto")) {
         return AUTO;
@@ -59,6 +61,8 @@ public enum TokenType {
       return FLOATLITERAL;
     } else if (state == State.COMMENT) {
       return COMMENT;
+    } else if (state == State.CHAR) {
+      return CHARLITERAL;
     } else if (state == State.GREATERTHAN 
         || state == State.RELATION || state == State.SMALLERTHAN) {
       return RELATIONALOP;
@@ -84,6 +88,10 @@ public enum TokenType {
         return SEMICOLON;
       } else if (lexeme.equals(",")) {
         return COMMA;
+      } else if (lexeme.equals("[")) {
+        return OPENSQUAREBRACKETS;
+      } else if (lexeme.equals("]")) {
+        return CLOSESQUAREBRACKETS;
       } else {
         return SYMBOL;
       }

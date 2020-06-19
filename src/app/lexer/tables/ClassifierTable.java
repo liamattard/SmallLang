@@ -18,7 +18,10 @@ public class ClassifierTable {
     EQUALS,
     MULTIPLICATIVEOP,
     ADDITIVEOP,
-    OTHER;
+    OTHER,
+    OPENSQUAREBRACKET,
+    CLOSESQUAREBRACKET,
+    APOSTROPHE;
     
   }
 
@@ -43,7 +46,7 @@ public class ClassifierTable {
     } else if (c == '\n') {
       return Type.NEWLINE;
     } else if (c == '(' || c == ')' || c == '{' || c == '}' || c == ';'
-        || c == ':' || c == ',') {
+        || c == ':' || c == ',' || c == '[' || c == ']') {
       return Type.SYMBOL;
     } else if (c == '/') {
       return Type.SLASH;
@@ -57,8 +60,11 @@ public class ClassifierTable {
       return Type.GREATERTHAN;
     } else if (c == '<') {
       return Type.SMALLERTHAN;
+    } else if (c == '\'') {
+      return Type.APOSTROPHE;
+    } else {
+      return Type.OTHER;
     }
-    return Type.OTHER;
   }
 
 

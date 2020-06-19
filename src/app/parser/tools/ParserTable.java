@@ -31,7 +31,7 @@ public class ParserTable {
 
     // TODO: fix this loop
     lookahead = lexer.getNextToken();
-    for (int i = 0; i < 8; i++) {
+    for (int i = 0; i < 1; i++) {
       
       astProgramNode.addItem(parseStatement());
       
@@ -100,7 +100,41 @@ public class ParserTable {
       astVaribaleDecl.addItem(parseIdentifier(lexeme));
       lookahead = lexer.getNextToken();
       token = lookahead.getTokenType();
+      
+      if (token == TokenType.OPENSQUAREBRACKETS) {
 
+        lookahead = lexer.getNextToken();
+        token = lookahead.getTokenType();
+        lexeme = lookahead.getAttributes().getLexeme();
+
+        if (token == TokenType.INTEGERLITERAL) {
+
+          astVaribaleDecl.setSize(Integer.parseInt(lexeme)); 
+
+          lookahead = lexer.getNextToken();
+          token = lookahead.getTokenType();
+          lexeme = lookahead.getAttributes().getLexeme();
+
+
+          if (token == TokenType.CLOSESQUAREBRACKETS) {
+
+            lookahead = lexer.getNextToken();
+            token = lookahead.getTokenType();
+            lexeme = lookahead.getAttributes().getLexeme();
+               
+          } else {
+
+            System.out.println("Missing Close brackets for array declaration");
+
+          }
+
+        } else {
+
+          System.out.println("Error must be declared with size");
+
+        } 
+      }
+      
       if (token == TokenType.COLON) {
         lookahead = lexer.getNextToken();
         token = lookahead.getTokenType();
@@ -114,8 +148,20 @@ public class ParserTable {
 
           if (token == TokenType.EQUALS) {
             lookahead = lexer.getNextToken();
+            token = lookahead.getTokenType();
 
-            AstNode expression = parseExpression();
+            AstNode expression;
+
+            if (token == TokenType.OPENBRACKETS) {
+              
+              expression =  parseArrayDecl();
+
+            } else {
+
+              expression = parseExpression();
+
+            }
+
 
             if (lookahead.getTokenType() == TokenType.SEMICOLON) {
 
@@ -309,6 +355,23 @@ public class ParserTable {
     param.setName(lookahead.getAttributes().getLexeme());
     lookahead = lexer.getNextToken();
 
+    if (lookahead.getTokenType() == TokenType.OPENSQUAREBRACKETS) {
+
+      lookahead = lexer.getNextToken();
+      
+      if (lookahead.getTokenType() == TokenType.CLOSESQUAREBRACKETS) {
+
+        param.setIsArray(true);
+
+      } else {
+        System.out.println("Expected Close Brackets");
+      }
+      
+      lookahead = lexer.getNextToken();
+
+    }
+
+
     if (lookahead.getTokenType() == TokenType.COLON) {
 
       lookahead = lexer.getNextToken();
@@ -325,6 +388,37 @@ public class ParserTable {
     }
 
     return param;
+  }
+
+  private AstNode parseArrayDecl() {
+
+    AstNode arrayDecl = new AstVariableDeclNode();
+
+    lookahead = lexer.getNextToken();
+
+    while (lookahead.getTokenType() != TokenType.CLOSEDBRACKETS) {
+
+      arrayDecl.addItem(parseExpression());
+
+      if (lookahead.getTokenType() != TokenType.COMMA 
+          && lookahead.getTokenType() != TokenType.CLOSEDBRACKETS) {
+
+        System.out.println("Expected comma in array Declaration");
+
+      } 
+
+      if (lookahead.getTokenType() != TokenType.CLOSEDBRACKETS ){
+
+        lookahead = lexer.getNextToken();
+
+      }
+
+    }
+
+    lookahead = lexer.getNextToken();
+
+    return arrayDecl;
+
   }
 
   private AstNode parseExpression() {

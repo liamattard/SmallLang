@@ -19,7 +19,7 @@ public class CsvFileReader {
 
     List<Type> types = new ArrayList<Type>();
     List<StateType> stateTypes = new ArrayList<StateType>();
-    String csvFile = "src/app/lexer/csvfiles/Table.csv";
+    String csvFile = "src/app/lexer/csvfiles/TableV2.csv";
     BufferedReader br = null;
     String line = "";
 

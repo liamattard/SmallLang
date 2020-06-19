@@ -1,9 +1,11 @@
 package app.visitor;
 
 import app.parser.models.AstNodes.AstAdditiveOp;
+import app.parser.models.AstNodes.AstArrayDecl;
 import app.parser.models.AstNodes.AstAssignmentNode;
 import app.parser.models.AstNodes.AstBlock;
 import app.parser.models.AstNodes.AstBoolLiteral;
+import app.parser.models.AstNodes.AstCharLiteral;
 import app.parser.models.AstNodes.AstFloatLiteral;
 import app.parser.models.AstNodes.AstForStatement;
 import app.parser.models.AstNodes.AstFunctionCall;
@@ -59,5 +61,9 @@ public interface Visitor {
   public void visit(AstUnary unary);
 
   public void visit(IdentifierNode identifier);
+
+  public void visit(AstCharLiteral charLiteral);
+
+  public void visit(AstArrayDecl arrayDecl);
 
 }
